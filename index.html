@@ -1,24 +1,136 @@
- <!DOCTYPE html>
- <html lang="en">
-  <head>
-  <meta charset="UTF-8">
-  <meta name="viewport"content="width>device-width=1.0">
-  <title>Oluwagbenga dishes<br> &Confectioneries</title>
-  <meta name="description"content="I built this on my PC">
- <head>
-   <center><h1>🍽️Oluwagbenga dishes<br> &Confectioneries🍽️</h1></center>
-  <nav>
-   <ul>
-    <button><a href="#">Home</a></li></button>
-    <button><a href="#">Courses</a></li></button>
-    <button><a href="#">About</a></li></button>
-    <button><a href="#">Upgrade</a></li></button>
-   </ul>
-  </nav>
- </header>
-  <h2>THIS ARE TYPES OF OUR PRODUCT🍩</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tasty Bites - Food Sale</title>
+<style>
+  :root { --bg1: #ff512f; --bg2: #dd2476; --bg3: #00c9ff; --bg4: #92fe9d; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
+  
+  body {
+    background: linear-gradient(-45deg, var(--bg1), var(--bg2), var(--bg3), var(--bg4));
+    background-size: 400% 400%; animation: glowBg 12s ease infinite; transition: 0.3s;
+  }
+  body.dark { color: #fff; }
+  body.light { color: #222; background: linear-gradient(-45deg, #a18cd1, #fbc2eb, #84fab0, #8fd3f4); }
+  @keyframes glowBg { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+  .top-bar { display: flex; justify-content: space-between; padding: 15px; flex-wrap: wrap; gap: 10px; }
+  .theme-btn, .admin-btn, .services-btn { padding: 10px 20px; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; }
+  .theme-btn { background: #fff; color: #000; }
+  body.dark .theme-btn { background: #222; color: #fff; }
+  .admin-btn { background: #25D366; color: white; }
+  .services-btn { background: #ff7e5f; color: white; box-shadow: 0 0 15px #ff7e5f; }
+
+  header { padding: 40px 20px; text-align: center; text-shadow: 0 0 15px rgba(255,255,255,0.4); min-height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+  header h1 { font-size: 2.5rem; animation: pulse 2s infinite; }
+  @keyframes pulse { 50% { transform: scale(1.05); } }
+  header p { font-size: 1.1rem; margin: 15px 0; }
+
+  .menu { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 20px; }
+  .menu-title { text-align: center; font-size: 2rem; margin: 20px 0; }
+  .card { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 15px; backdrop-filter: blur(10px); text-align: center; }
+  body.light .card { background: rgba(0,0,0,0.05); }
+  .card img { width: 100%; height: 200px; object-fit: cover; border-radius: 15px; background: #333; }
+  .card h3 { margin: 10px 0 5px; font-size: 1.3rem; }
+  .card p { margin-bottom: 10px; }
+
+  .order-btn {
+    display: inline-block; padding: 10px 20px; background: #25D366; color: white;
+    font-weight: bold; border-radius: 25px; text-decoration: none;
+    box-shadow: 0 0 15px #25D366; transition: 0.3s;
+  }
+  .order-btn:hover { transform: scale(1.05); }
+
+  /* ADMIN PANEL */
+  #adminPanel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 999; }
+  .admin-box { background: #fff; color: #000; padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; }
+  .admin-box input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 10px; border: 1px solid #ccc; }
+  .admin-box button { width: 100%; padding: 12px; background: #25D366; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+</style>
+</head>
+<body class="dark">
+
+<div class="top-bar">
+  <button class="theme-btn" onclick="toggleTheme()">🌙 Dark / ☀️ Light</button>
+  <button class="services-btn" onclick="document.getElementById('menuSection').scrollIntoView()">🍽️ Our Services</button>
+  <button class="admin-btn" onclick="document.getElementById('adminPanel').style.display='flex'">+ Add Food</button>
+</div>
+
+<header>
+  <h1>🍔 Oluwagbenga<br>Dishes & Confectioneries 🍗</h1>
+  <p>Delicious meals delivered hot to your door!</p>
+  <button class="services-btn" onclick="document.getElementById('menuSection').scrollIntoView()">View Menu ↓</button>
+</header>
+
+<section id="menuSection">
+  <h2 class="menu-title">Our Services / Menu</h2>
+  <section class="menu" id="menu"></section>
+</section>
+
+<div id="adminPanel">
+  <div class="admin-box">
+    <h2>Add New Food</h2>
+    <input type="text" id="foodName" placeholder="Food Name e.g Suya">
+    <input type="text" id="foodPrice" placeholder="Price e.g ₦2,500">
+    <input type="text" id="foodDesc" placeholder="Short Description">
+    <small>Note: For offline, image will be placeholder.</small>
+    <button onclick="addFood()">Save Food</button>
+    <button style="background:red; margin-top:10px;" onclick="document.getElementById('adminPanel').style.display='none'">Close</button>
+  </div>
+</div>
+
+<script>
+  const WHATSAPP_NUMBER = "2348132149255"; // Your number
+
+  let foods = JSON.parse(localStorage.getItem('foods')) || [
+    {name:"Jollof Rice & Chicken", price:"₦4,000", desc:"Nigerian party jollof with grilled chicken", img:"https://placehold.co/400x300/ff512f/fff?text=Jollof"},
+    {name:"Suya & Yaji", price:"₦2,500", desc:"Spicy grilled beef suya with onions", img:"https://placehold.co/400x300/dd2476/fff?text=Suya"},
+    {name:"Pounded Yam & Egusi", price:"₦3,500", desc:"Hot pounded yam with egusi soup", img:"https://placehold.co/400x300/00c9ff/fff?text=Pounded+Yam"}
+  ];
+
+  function renderFoods() {
+    document.getElementById('menu').innerHTML = '';
+    foods.forEach(food => {
+      let message = encodeURIComponent(`Hello, I want to order this: ${food.name} - ${food.price}`);
+      document.getElementById('menu').innerHTML += `
+        <div class="card">
+          <img src="${food.img}" alt="${food.name}">
+          <h3>${food.name}</h3>
+          <p>${food.desc}</p>
+          <p><b>${food.price}</b></p>
+          <a class="order-btn" href="https://wa.me/${WHATSAPP_NUMBER}?text=${message}" target="_blank">
+            📲 Order Now
+          </a>
+        </div>
+      `;
+    });
+  }
+
+  function addFood() {
+    let name = document.getElementById('foodName').value;
+    let price = document.getElementById('foodPrice').value;
+    let desc = document.getElementById('foodDesc').value;
+    let img = `https://placehold.co/400x300/92fe9d/000?text=${name.replace(/ /g,'+')}`;
+    if(name && price) {
+      foods.push({name, price, desc, img});
+      localStorage.setItem('foods', JSON.stringify(foods));
+      renderFoods();
+      document.getElementById('adminPanel').style.display='none';
+      alert('Food Added! It will save offline.');
+    }
+  }
+
+  function toggleTheme() {
+    document.body.classList.toggle('dark');
+    document.body.classList.toggle('light');
+  }
+
+  renderFoods();
+</script>
 <!-- WHATSAPP ORDER BUTTON START -->
-<a href="https://wa.me/+1 (403) 586-7154?text=Hi%20Boss%20I%20want%20to%20order%20an%20account" 
+<a href="https://wa.me/+234 813 214 9255?text=Hi%20Boss%20I%20want%20to%20order%20an%20food" 
    target="_blank" 
    style="display:inline-flex; align-items:center; justify-content:center; gap:8px; background:#25D366; color:#ffffff; font-size:17px; font-weight:700; text-decoration:none; padding:16px 30px; border-radius:50px; width:85%; max-width:320px; transition:0.3s; box-shadow:0 4px 15px rgba(37,211,102,0.3); margin:20px auto;">
    
@@ -26,108 +138,5 @@
    Chat on WhatsApp
 </a>
 <!-- WHATSAPP ORDER BUTTON END -->
-  <div class="Profile-card">
-   <center><img src="IMG-20260901-WA0013.jpg">
-   <hr/>
-   <img src="IMG-20260901-WA0010.jpg">
-   <hr/>
-   <img src="IMG-20260901-WA0011.jpg"></center>
-   <h2 id="student-name"><i>Dishes & Confectioneries</i></h2>
-   <p>Best choice 
-    <span div="course-tag">for your Dishes❤️
-    </span>course.
-   </p>
-  <a href="https://github.com" alt="view student code profile">
- </a>
-  <h3>Our services 📞</h3>
-   <ul>
-    <li>Delight Dishes for wedding cerimony💃</li>
-    <li>Naming cerimony food and snacks.🧑‍🍼</li>
-    <li>Birthday party🎂 </li>
-    <li>Indoor And outdoor services🤸</li>
-    <li>Home pick up🕴️</li>
-    <li>Fast delivery active 24/7⏳</li>
-   </ul>
-  </div>
-  <center><h2><b><u>FILL THIS FORM TO ORDER YOUR DELIGHT🍔</u></b></h2>
-  <form action="https://squarepant329-boop.github.io/Our-services/"method"POST">
-   <label for="userName">🍟Item purposes:</label>
-   <input for="text"
-          for="UserName"
-          for="userName"
-          placeholder="wedding">
-          <br><br>
-   <!--Message Area-->
-   <label for="user Message"><b><u>🍕Your needed Food stuff</u></b></label><br>
-   <textarea id=name="userMessage"rows="10"cols="50"></textarea><br>
-   <label for="userEmail">Item type:</label><br>
-   <input for="email"id="userEmail"text id="userEmail"placeholder="snacks"><br><br> 
-   <label for ="userPassword">Quantity:</label>
-   <input type="text id="userPassword"name="userPassword">
-   <h3><b>For more services</b></h3>
-   <button><a href="gbengamadamori@gmail.com">Contact us📞</a>
-  <main>
-   <article>
-   <h3>gbengamadamori@gmail.com</h3>
-
-   <input type="submit"></input>
-  </form> 
-    <h2>Service from Oluwagbenga dishes and confectioneries🍔</h2>
-    <p><i>we order food from various station🕴️</i></p>
-   </article>
-  <aside>
-   <h2>other Information🖋️</h2>
-   <p>You can Contact us on Whatsapp above📱<p>
-  </aside>
- </main>
-  <footer>
-   <p>Related links</p>
-  </footer>
-  <aside>
-   <p>&copy;2026 food services</p>
-  </aside>
-  <style>
-  body { background-image: url("5534a0fb521caa652a73f9c6498b28ad.jpg");
-   } 
-         font-family: Gabriola;
-         font-size: 120px;
-         text-align: center;
-      }
-  profile-card { background-color: blue;
-                 border: 2px #333333;
-                 border-radius: 50px;
-                 padding:Rounded corners;
-                 text-align: center;
-               }
-  features { display: three column layout;
-             gap: centered text;
-          }
-  features { padding: rounded corners;
-             boder-radius:80px;
-          }
-  /*Responsive Design*/
-  @media(max-width:150)
-  features { flex-direction:Responsive layout;
-          }
-         }
-  </style>
-   </head>
-    </script>
-  <!--The Heading and Button-->
-  <h1 id="statusText">If you find our site usefull pls kindly like us below.</h1>
-  <button id="likeBtn"onclick="toggleLike()">Like❤️</button>
-  <script>
-   function toggleLike(){//1.Find the elements on the page using their ID
-   let heading=document.getElementById("statusText");
-   let button=document.getElementById("likeBtn");
-   //2.Change their text and styles instantly
-   heading.innerText="Liked!";
-   button.style.backgroundColor="#007bff";
-   button.style.color="white";
-   }
-
-  </script>
-  </div>
- </body>
-  </html>
-                  
+</body>
+     </html>
